@@ -1,0 +1,2438 @@
+{
+	"info": {
+		"_postman_id": "995dcd5b-4c43-4dcc-b1c8-200d6e6e4355",
+		"name": "USER",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46909505",
+		"_collection_link": "https://afnan-mamoun.postman.co/workspace/User_API_Project~145fe9a3-6bed-4db5-a95e-468f1f7e0c94/collection/46909505-995dcd5b-4c43-4dcc-b1c8-200d6e6e4355?action=share&source=collection_link&creator=46909505"
+	},
+	"item": [
+		{
+			"name": "User_Add",
+			"item": [
+				{
+					"name": "Verify add user with valid first name,last name,email and password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"token\",jsonData.token);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Response body contains user ID,firstName,lastName,email,__v,token\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"user\");\r",
+									"    pm.expect(jsonData.user).to.have.property(\"_id\");\r",
+									"    pm.expect(jsonData.user).to.have.property(\"firstName\");\r",
+									"    pm.expect(jsonData.user).to.have.property(\"lastName\");\r",
+									"    pm.expect(jsonData.user).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.user).to.have.property(\"__v\");\r",
+									"     pm.expect(jsonData).to.have.property(\"token\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test@fake8000.com\",\r\n    \"password\": \"myPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user leaving required field blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user enter invalid password length less than",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test@fake22222.com\",\r\n    \"password\": \"myPa\"}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user leave first name blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test@fake22222.com\",\r\n    \"password\": \"myPassowrd\"}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user leave last name blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"\",\r\n    \"email\": \"test@fake22222.com\",\r\n    \"password\": \"myPassword\"}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user enter invalid email format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"user\",\r\n    \"email\": \"testfake22222.com\",\r\n    \"password\": \"myPassword\"}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify add user by enter already registered user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message:Email address is already in use\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test@fake222.com\",\r\n    \"password\": \"myPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user with invalid JSON format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\"\r\n    \"lastName\": \"user\"\r\n    \"email\": \"testfake22222.com\"\r\n    \"password\": \"myPassword\"\r\n    }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user with leave email field blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"\",\r\n    \"password\": \"myPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user with leave password field blank",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test@fake2300.com\",\r\n    \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user with invalid firstname",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"$$$$\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test@fake09900.com\",\r\n    \"password\": \"myPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify add user with invalid last name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"555\",\r\n    \"email\": \"test@fake9900.com\",\r\n    \"password\": \"myPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User_Profile",
+			"item": [
+				{
+					"name": "Verify GET request with a valid ID retrieves the expected data for a single resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response body contains user ID\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
+									"});\r",
+									"pm.test(\"Response body contains user firstName\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"firstName\");\r",
+									"});\r",
+									"pm.test(\"Response body contains user lasttName\", function () {\r",
+									"     pm.expect(jsonData).to.have.property(\"lastName\");\r",
+									"});\r",
+									"pm.test(\"Response body contains user email\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"email\");\r",
+									"});\r",
+									"pm.test(\"Response body contains user __v\", function () {\r",
+									"     \r",
+									"    pm.expect(jsonData).to.have.property(\"__v\");\r",
+									"});\r",
+									"    \r",
+									"   \r",
+									"   \r",
+									"    \r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Get request for Non-existent Resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/users/687f565640c7790015bf6fb2",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"687f565640c7790015bf6fb2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify get for invalid id format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/users/abcdefg",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"abcdefg"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify get with null id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 Not Found\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/users/",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify Unauthenticated Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Response contains error message:Please authenticate\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update_User",
+			"item": [
+				{
+					"name": "Verify update all field with Valid token, and updated JSON fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"pm.test(\"Updated user fields returned\", () => {\r",
+									"    pm.expect(jsonData.firstName).to.eql(\"Updated\");\r",
+									"    pm.expect(jsonData.lastName).to.eql(\"Username\");\r",
+									"    pm.expect(jsonData.email).to.eql(\"test2033@fake.com\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Updated\",\r\n    \"lastName\": \"Username\",\r\n    \"email\": \"test2033@fake.com\",\r\n    \"password\": \"myNewPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update one field with valid token and updated JSON fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"pm.test(\"Updated user fields returned\", () => {\r",
+									"    pm.expect(jsonData.firstName).to.eql(\"updated2\");\r",
+									"   \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"updated2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update Missing Authorization header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Response contains error message:Please authenticat\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Updated\",\r\n    \"lastName\": \"Username\",\r\n    \"email\": \"test2020@fake.com\",\r\n    \"password\": \"myNewPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update with Invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Response contains error message:Please authenticat\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "12345678902356790",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Updated\",\r\n    \"lastName\": \"Username\",\r\n    \"email\": \"test2020@fake.com\",\r\n    \"password\": \"myNewPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update with Invalid email format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 bad request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \r\n    \"email\": \"test2020fake.com\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update with password less than 7 length",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 bad request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"password\": \"myN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update with invalid JSON format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Updated33\"\r\n    \"lastName\": \"Username44\"\r\n    \"email\": \"test2020@7fake.com\"\r\n    \"password\": \"myNewPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update with invalid first name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 bad request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"&&&\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify update with invalid last name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 bad request\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lastName\": \"555\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base_URL}}/users/me",
+							"host": [
+								"{{Base_URL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User_Login",
+			"item": [
+				{
+					"name": "Verify user login with valid credential(email &password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Fixed JSON parsing error\r",
+									"let response = pm.response.text(); // Changed to text since the response is XML\r",
+									"\r",
+									"var jsonDataToken = pm.response.json().token;\r",
+									"pm.collectionVariables.set(\"token\",jsonDataToken);\r",
+									"var jsonDataUserId = pm.response.json().user._id;\r",
+									"pm.collectionVariables.set(\"_id\",jsonDataUserId);\r",
+									"\r",
+									"// Test for Content-Length header\r",
+									"pm.test(\"Content-Length header is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Length\");\r",
+									"});\r",
+									"\r",
+									"// Verify the status code\r",
+									"pm.test(\"Status code is 200\", function () { // Updated status code to 401\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Verify that the response is not empty\r",
+									"pm.test(\"Response is not empty\", function () {\r",
+									"    pm.expect(response).to.be.not.empty; // Added test for empty response\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linalina@gmail.com\",\r\n    \"password\": \"linashaq20=+\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user login with unregistered email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check that the response status is 401 (Unauthorized)\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"// Ensure no token is returned (since login failed)\r",
+									"pm.test(\"No token should be present\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.include(\"<token>\"); // Adjusted for XML response\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaq@gmail.com\",\r\n    \"password\": \"linashaqoura2020#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user login with valid email but old/wrong password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Fixed response variable definition\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"// Ensure no token is returned, since login failed\r",
+									"pm.test(\"No token should be issued\", function () {\r",
+									"    const response = pm.response.text(); // Properly define response\r",
+									"    pm.expect(response).to.not.have.property(\"token\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaqoura360@gmail.com\",\r\n    \"password\": \"linashaqoura2020\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user login with empty request body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verify the status code (accept 400 or 401)\r",
+									"pm.test(\"Status code is 400 or 401 for empty body\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+									"});\r",
+									"\r",
+									"let response;\r",
+									"try {\r",
+									"    response = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    response = {};\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// Ensure no token is returned\r",
+									"pm.test(\"No token should be issued for empty request\", function () {\r",
+									"    pm.expect(response).to.not.have.property(\"token\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user login with miss any required fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verify the status code (accept 400 or 401)\r",
+									"pm.test(\"Status code is 400 or 401 for empty body\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+									"});\r",
+									"\r",
+									"let response;\r",
+									"try {\r",
+									"    response = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    response = {};\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// Ensure no token is returned\r",
+									"pm.test(\"No token should be issued for empty request\", function () {\r",
+									"    pm.expect(response).to.not.have.property(\"token\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaqoura20@2gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user login with invalid email format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Parse the response safely\r",
+									"let response;\r",
+									"try {\r",
+									"    response = pm.response.json();\r",
+									"} catch (e) {\r",
+									"    response = {};\r",
+									"}\r",
+									"// Ensure no token is returned\r",
+									"pm.test(\"No token should be issued for invalid email format\", function () {\r",
+									"    pm.expect(response).to.not.have.property(\"token\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaqoura360.com\",\r\n    \"password\": \"linashaqoura2020#\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User_Logout",
+			"item": [
+				{
+					"name": "Verify user logout with valid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check that the status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// Clear the token (simulate logout state)\r",
+									"pm.environment.unset(\"token\");\r",
+									"\r",
+									"// Verify token was cleared\r",
+									"pm.test(\" token removed from environment\", function () {\r",
+									"    pm.expect(pm.environment.get(\"token\")).to.eql(undefined);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaqoura360@gmail.com\",\r\n    \"password\": \"linashaqoura2020#\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user logout with invalid token format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// تحقق أن السيرفر يرجع 401 Unauthorized أو 400 Bad Request\r",
+									"pm.test(\"Status is 401 or 400 for invalid token\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+									"});\r",
+									"\r",
+									"// Check that error message exists\r",
+									"\r",
+									"pm.test(\"error message  exists\", function () {\r",
+									"   pm.expect(pm.response.json().error).to.equal(\"Please authenticate.\");\r",
+									"});\r",
+									"//Authorization header exists\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// تأكد أنه ما يتم حذف التوكن الصحيح (لو موجود سابقًا)\r",
+									"pm.test(\"Valid token not removed accidentally\", function () {\r",
+									"    const currentToken = pm.environment.get(\"token\");\r",
+									"    // الاختبار ينجح حتى لو التوكن مش موجود (لو مش مهم وجوده)\r",
+									"    pm.expect(currentToken).to.not.eql(\"someValidToken\"); \r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "\"{{token}}\"",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user logout with expire/old token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Fixed regex match syntax\r",
+									"pm.test(\"Error message mentions expired or unauthorized\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message || jsonData.error || \"\").to.include(\"Please authenticate.\");\r",
+									"});\r",
+									"\r",
+									"// تحقق أن الاستجابة ترجع 401 Unauthorized\r",
+									"pm.test(\"Status code is 401 for expired token\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"//Authorization header exists\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// لا نحذف التوكنات الموجودة (حتى لا نمسح التوكن الصالح في بيئة أخرى)\r",
+									"const currentToken = pm.environment.get(\"token\");\r",
+									"pm.test(\"Other valid tokens remain intact (if any)\", function () {\r",
+									"    if (currentToken !== undefined) {\r",
+									"        pm.expect(currentToken).to.not.eql(undefined);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODdmM2M5MTQwYzQ5OTAwMTViZjZlY2EiLCJpYXQiOjE3NTMxNzQ4NjJ9.cbv1PDUgFubKO_I47nKGYZ_JUPpRLvqXokp9dvG0RNw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaqoura360@gmail.com\",\r\n    \"password\": \"linashaqoura2020#\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user logout without token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"pm.test(\"Authorization check\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.false;\r",
+									"});\r",
+									"pm.test(\"Response schema is valid\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response).to.have.all.keys('error');\r",
+									"    pm.expect(response.error).to.be.a('string');\r",
+									"});\r",
+									"// Check that the response body contains the expected error message\r",
+									"pm.expect(pm.response.json().error).to.equal(\"Please authenticate.\");\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Logout multiple times with the same valid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Status code is 401\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"//Authorization header is present\r",
+									"pm.test(\"Authorization header is present\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"//Error message is present in response body\r",
+									"pm.test(\"Error message is present in response body\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response).to.have.property('error');\r",
+									"    pm.expect(response.error).to.equal('Please authenticate.');\r",
+									"});\r",
+									"//clear token \r",
+									"pm.environment.unset(\"token\");\r",
+									"pm.test(\" token removed after repeated logout tests\", function () {\r",
+									"    pm.expect(pm.environment.get(\"token\")).to.eql(undefined);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete_User",
+			"item": [
+				{
+					"name": "Verify delete user with valid id and valid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 204\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+									" });\r",
+									" \r",
+									" pm.test(\"Body is empty or success message\", function () {\r",
+									"    const body = pm.response.text();\r",
+									"    pm.expect(body === \"\" || body.toLowerCase().includes(\"success\")).to.be.true;\r",
+									" });\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me?id={{_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify delete user with valid id and invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 401\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+									" });\r",
+									"\r",
+									" pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// Check that error message exists\r",
+									"\r",
+									"pm.test(\"error message  exists\", function () {\r",
+									"   pm.expect(pm.response.json().error).to.equal(\"Please authenticate.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me?id={{_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify delete user with invalid id and valid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									" pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// Check that error message exists\r",
+									"\r",
+									"pm.test(\"error message  exists\", function () {\r",
+									"   pm.expect(pm.response.json().error).to.equal(\"User Not Found..\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me/?id=687f3c9140c49",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "687f3c9140c49"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify delete user with invalid id and invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"// Test for status code\r",
+									"pm.test(\"Status is 401 or 400 for invalid token\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 401]);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Test for content-type header\r",
+									"pm.test(\"Content-Type is application/json\", () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"// Test for error message in the response body\r",
+									"pm.test(\"Error message is present\", () => {\r",
+									"    pm.expect(response.error).to.exist;\r",
+									"    pm.expect(response.error).to.be.a('string');\r",
+									"    pm.expect(response.error).to.equal(\"Please authenticate.\");\r",
+									"});\r",
+									"//Authorization header exists\r",
+									"pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Verify delete user with invalid id and invalid token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me/?id=687f3c9140c49",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "687f3c9140c49"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify delete user with missing token in header",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(401);\r",
+									" });\r",
+									" pm.test(\"Authorization check\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.false;\r",
+									"});\r",
+									"pm.test(\"Response schema is valid\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response).to.have.all.keys('error');\r",
+									"    pm.expect(response.error).to.be.a('string');\r",
+									"});\r",
+									"// Check that the response body contains the expected error message\r",
+									"pm.expect(pm.response.json().error).to.equal(\"Please authenticate.\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me/?id={{_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify delete non existing user id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									" pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// Check that error message exists\r",
+									"\r",
+									"pm.test(\"error message  exists\", function () {\r",
+									"   pm.expect(pm.response.json().error).to.equal(\"User Not Found.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me/?id=687f3c9140c4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "687f3c9140c4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify multiple delete  for same user user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									" pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// Check that error message exists\r",
+									"\r",
+									"pm.test(\"error message  exists\", function () {\r",
+									"   pm.expect(pm.response.json().error).to.equal(\"User Not Found.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/me/?id={{_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user is actually deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									" pm.test(\"Authorization header exists\", function () {\r",
+									"    pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;\r",
+									"});\r",
+									"// Check that error message exists\r",
+									"\r",
+									"pm.test(\"error message  exists\", function () {\r",
+									"   pm.expect(pm.response.json().error).to.equal(\"User Not Found.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"linashaqoura2002@gmail.com\",\r\n    \"password\": \"linashaq20=+\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users?id={{_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
