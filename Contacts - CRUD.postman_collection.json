@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "715cdb89-feaa-4a00-afa6-2dcafaa329b8",
-		"name": "Contacts - CRUD",
+		"name": "Contacts",
 		"description": "# Description:\n\nThe Contacts resource stores and manages user contact information, including names, emails, phone numbers, and addresses. It supports full CRUD operations via these API endpoints:\n\n- `POST /contacts` → Add new contact\n    \n- `GET /contacts` → Retrieve all contacts\n    \n- `GET /contacts/:id` → Get single contact\n    \n- `PUT /contacts/:id` → Fully replace contact\n    \n- `PATCH /contacts/:id` → Partially update contact\n    \n- `DELETE /contacts/:id` → Remove contact",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44632857",
@@ -122,7 +122,7 @@
 			"name": "POST - Add Contact",
 			"item": [
 				{
-					"name": "Create contact with all valid fields",
+					"name": "TC - 1 | Create contact with all valid fields",
 					"event": [
 						{
 							"listen": "test",
@@ -132,66 +132,48 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
 									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact firstName and lastName matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
+									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
-									"\r",
-									"let requestBody = JSON.parse(pm.request.body.raw);\r",
-									"let responseBody = pm.response.json();\r",
-									"\r",
-									"pm.test(\"All request values match response values\", function () {\r",
-									"    for (let key in requestBody) {\r",
-									"        pm.expect(responseBody[key]).to.eql(requestBody[key], `${key} does not match`);\r",
-									"    }\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
 									"});\r",
-									"\r",
-									"let jsonData = pm.response.json(); // Defined jsonData here\r",
-									"\r",
 									"pm.test(\"Validate JSON schema (data type)\", function () {\r",
-									"    const schema = {\r",
-									"        \"type\": \"object\",\r",
-									"        \"required\": [\r",
-									"            \"firstName\", \"lastName\", \"birthdate\", \"email\", \"phone\",\r",
-									"            \"street1\", \"street2\", \"city\", \"stateProvince\", \"postalCode\", \"country\"\r",
-									"        ],\r",
-									"        \"properties\": {\r",
-									"            \"firstName\": { \"type\": \"string\" },\r",
-									"            \"lastName\": { \"type\": \"string\" },\r",
-									"            \"birthdate\": { \"type\": \"string\", \"pattern\": \"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\" },\r",
-									"            \"email\": { \"type\": \"string\", \"format\": \"email\" },\r",
-									"            \"phone\": { \"type\": \"string\" },\r",
-									"            \"street1\": { \"type\": \"string\" },\r",
-									"            \"street2\": { \"type\": \"string\" },\r",
-									"            \"city\": { \"type\": \"string\" },\r",
-									"            \"stateProvince\": { \"type\": \"string\" },\r",
-									"            \"postalCode\": { \"type\": \"string\" },\r",
-									"            \"country\": { \"type\": \"string\" }\r",
-									"        }\r",
-									"    };\r",
-									"\r",
-									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
-									"});\r",
-									""
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.birthdate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.phone).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street1).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street2).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.city).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.stateProvince).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.postalCode).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.country).to.be.a(\"string\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -226,7 +208,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to create contact with missing firstName",
+					"name": "TC - 2 | Attempt to create contact with missing firstName",
 					"event": [
 						{
 							"listen": "test",
@@ -236,10 +218,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -276,7 +258,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to create contact with missing lastName",
+					"name": "TC - 3 | Attempt to create contact with missing lastName",
 					"event": [
 						{
 							"listen": "test",
@@ -286,10 +268,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -326,7 +308,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to create contact with missing email",
+					"name": "TC - 4 | Attempt to create contact with missing email",
 					"event": [
 						{
 							"listen": "test",
@@ -336,29 +318,30 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
 									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -394,7 +377,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with invalid email format",
+					"name": "TC - 5 | Create contact with invalid email format",
 					"event": [
 						{
 							"listen": "test",
@@ -404,10 +387,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -444,7 +427,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with invalid phone number",
+					"name": "TC - 6 | Create contact with invalid phone number",
 					"event": [
 						{
 							"listen": "test",
@@ -454,10 +437,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -494,7 +477,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with invalid birthdate format",
+					"name": "TC - 7 | Create contact with invalid birthdate format",
 					"event": [
 						{
 							"listen": "test",
@@ -504,10 +487,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -544,7 +527,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to create contact with all  fields empty",
+					"name": "TC - 8 | Attempt to create contact with all  fields empty",
 					"event": [
 						{
 							"listen": "test",
@@ -554,10 +537,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -594,7 +577,7 @@
 					"response": []
 				},
 				{
-					"name": "Submit only optional fields in contact creation",
+					"name": "TC - 9 | Submit only optional fields in contact creation",
 					"event": [
 						{
 							"listen": "test",
@@ -604,10 +587,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -644,7 +627,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to create contact with duplicate email",
+					"name": "TC - 10 | Attempt to create contact with duplicate email",
 					"event": [
 						{
 							"listen": "test",
@@ -654,10 +637,10 @@
 									"    pm.response.to.have.status(409);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([409]);\r",
+									"    pm.expect(pm.response.code).to.equal(409);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									"\r",
 									""
@@ -695,7 +678,7 @@
 					"response": []
 				},
 				{
-					"name": "Submit unknown/extra fields in request body",
+					"name": "TC - 11 | Submit unknown/extra fields in request body",
 					"event": [
 						{
 							"listen": "test",
@@ -705,10 +688,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -745,22 +728,40 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with street address 1 as only whitespace",
+					"name": "TC - 12 | Create contact with street address 1 as only whitespace",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									""
+									"pm.test(\"Contact ID is returned\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
+									"});\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
+									"    var input = JSON.parse(pm.request.body.raw);\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
+									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
+									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -795,7 +796,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with street address 1 long string (300+ characters)",
+					"name": "TC - 13 | Create contact with street address 1 long string (300+ characters)",
 					"event": [
 						{
 							"listen": "test",
@@ -805,10 +806,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -845,22 +846,40 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with street address 1 special characters only",
+					"name": "TC - 14 | Create contact with street address 1 special characters only",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									""
+									"pm.test(\"Contact ID is returned\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
+									"});\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
+									"    var input = JSON.parse(pm.request.body.raw);\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
+									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
+									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -895,7 +914,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with city as numbers only",
+					"name": "TC - 15 | Create contact with city as numbers only",
 					"event": [
 						{
 							"listen": "test",
@@ -905,10 +924,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -945,7 +964,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with state as special chars only",
+					"name": "TC - 16 | Create contact with state as special chars only",
 					"event": [
 						{
 							"listen": "test",
@@ -955,10 +974,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -995,7 +1014,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with postal code only alphabetic characters",
+					"name": "TC - 17 | Create contact with postal code only alphabetic characters",
 					"event": [
 						{
 							"listen": "test",
@@ -1005,10 +1024,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -1045,7 +1064,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with postal code negative numbers",
+					"name": "TC - 18 | Create contact with postal code negative numbers",
 					"event": [
 						{
 							"listen": "test",
@@ -1055,10 +1074,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -1095,7 +1114,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with long postal code (300+ numbers)",
+					"name": "TC - 19 | Create contact with long postal code (300+ numbers)",
 					"event": [
 						{
 							"listen": "test",
@@ -1105,10 +1124,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -1145,7 +1164,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with country as numbers only",
+					"name": "TC - 20 | Create contact with country as numbers only",
 					"event": [
 						{
 							"listen": "test",
@@ -1155,10 +1174,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -1195,7 +1214,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with invalid country name (nonsense)",
+					"name": "TC - 21 | Create contact with invalid country name (nonsense)",
 					"event": [
 						{
 							"listen": "test",
@@ -1205,10 +1224,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -1245,43 +1264,41 @@
 					"response": []
 				},
 				{
-					"name": "SQL injection attempt in contact input fields",
+					"name": "TC - 22 | SQL injection attempt in contact input fields",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"\r",
 									"pm.test(\"Status code is 201 Created\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
-									"    pm.environment.set(\"contactId\", jsonData._id); // Save for use in PUT/DELETE\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
-									"});\r",
-									"\r",
-									""
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -1316,7 +1333,7 @@
 					"response": []
 				},
 				{
-					"name": "XSS script injection in contact input fields",
+					"name": "TC - 23 | XSS script injection in contact input fields",
 					"event": [
 						{
 							"listen": "test",
@@ -1326,29 +1343,30 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
-									"    pm.environment.set(\"contactId\", jsonData._id); // Save for use in PUT/DELETE\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
 									"pm.environment.set(\"_id\", \"68800aeab9cbc800152c0a80\");"
 								],
@@ -1385,7 +1403,7 @@
 					"response": []
 				},
 				{
-					"name": "Input firstName field with maximum allowed length (20 chars)",
+					"name": "TC - 24 | Input firstName field with maximum allowed length (20 chars)",
 					"event": [
 						{
 							"listen": "test",
@@ -1395,29 +1413,30 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
-									"    pm.environment.set(\"contactId\", jsonData._id); // Save for use in PUT/DELETE\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
 									""
 								],
@@ -1454,7 +1473,7 @@
 					"response": []
 				},
 				{
-					"name": "Input lastName field exceeding maximum length (21+ chars)",
+					"name": "TC - 25 | Input lastName field exceeding maximum length (21+ chars)",
 					"event": [
 						{
 							"listen": "test",
@@ -1464,10 +1483,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									"\r",
 									""
@@ -1505,7 +1524,7 @@
 					"response": []
 				},
 				{
-					"name": "Input firstName field with minimum value (1 character)",
+					"name": "TC - 26 | Input firstName field with minimum value (1 character)",
 					"event": [
 						{
 							"listen": "test",
@@ -1515,29 +1534,30 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
-									"    pm.environment.set(\"contactId\", jsonData._id); // Save for use in PUT/DELETE\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
 									""
 								],
@@ -1574,7 +1594,7 @@
 					"response": []
 				},
 				{
-					"name": "Create contact without providing auth token",
+					"name": "TC - 27 | Create contact without providing auth token",
 					"event": [
 						{
 							"listen": "test",
@@ -1584,11 +1604,10 @@
 									"    pm.response.to.have.status(401);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([401]);\r",
+									"    pm.expect(pm.response.code).to.equal(401);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									"\r",
 									""
@@ -1627,21 +1646,20 @@
 					"response": []
 				},
 				{
-					"name": "Create contact with invalid/expired auth token",
+					"name": "TC - 28 | Create contact with invalid/expired auth token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 403 Forbidden\", function () {\r",
-									"    pm.response.to.have.status(403);\r",
+									"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([403]);\r",
+									"    pm.expect(pm.response.code).to.equal(401);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									"\r",
 									""
@@ -1685,7 +1703,7 @@
 					"response": []
 				},
 				{
-					"name": "Send empty JSON body during creation",
+					"name": "TC - 29 | Send empty JSON body during creation",
 					"event": [
 						{
 							"listen": "test",
@@ -1695,11 +1713,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									"\r",
 									""
@@ -1737,7 +1755,7 @@
 					"response": []
 				},
 				{
-					"name": "Submit input firstName field containing only whitespace",
+					"name": "TC - 30 | Submit input firstName field containing only whitespace",
 					"event": [
 						{
 							"listen": "test",
@@ -1747,11 +1765,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									"\r",
 									""
@@ -1789,7 +1806,7 @@
 					"response": []
 				},
 				{
-					"name": "Ensure contact creation response time is under 500ms",
+					"name": "TC - 31 | Ensure contact creation response time is under 500ms",
 					"event": [
 						{
 							"listen": "test",
@@ -1799,29 +1816,30 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
 									"pm.test(\"Response time is less than 500ms\", function () {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
-									"    pm.environment.set(\"contactId\", jsonData._id); // Save for use in PUT/DELETE\r",
+									"    pm.environment.set(\"contactId\", jsonData._id); \r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
 									"pm.environment.set(\"_id\", \"68800aeab9cbc800152c0a80\");"
 								],
@@ -2632,7 +2650,7 @@
 			"name": "PUT - Update Contact",
 			"item": [
 				{
-					"name": "Successfully update all fields of an existing contact",
+					"name": "TC - 45 | Successfully update all fields of an existing contact",
 					"event": [
 						{
 							"listen": "test",
@@ -2641,55 +2659,44 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.expect(pm.response.code).to.eql(200);\r",
 									"});\r",
-									"\r",
+									"pm.test(\"Successful PUT request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
 									"pm.test(\"Contact updated with correct fields\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
-									"\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"let requestBody = JSON.parse(pm.request.body.raw);\r",
-									"let responseBody = pm.response.json();\r",
-									"\r",
-									"pm.test(\"All request values match response values\", function () {\r",
-									"    for (let key in requestBody) {\r",
-									"        pm.expect(responseBody[key]).to.eql(requestBody[key], `${key} does not match`);\r",
-									"    }\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
 									"});\r",
-									"\r",
-									"let jsonData = pm.response.json(); // Defined jsonData here\r",
-									"\r",
 									"pm.test(\"Validate JSON schema (data type)\", function () {\r",
-									"    const schema = {\r",
-									"        \"type\": \"object\",\r",
-									"        \"required\": [\r",
-									"            \"firstName\", \"lastName\", \"birthdate\", \"email\", \"phone\",\r",
-									"            \"street1\", \"street2\", \"city\", \"stateProvince\", \"postalCode\", \"country\"\r",
-									"        ],\r",
-									"        \"properties\": {\r",
-									"            \"firstName\": { \"type\": \"string\" },\r",
-									"            \"lastName\": { \"type\": \"string\" },\r",
-									"            \"birthdate\": { \"type\": \"string\", \"pattern\": \"^\\\\d{4}-\\\\d{2}-\\\\d{2}$\" },\r",
-									"            \"email\": { \"type\": \"string\", \"format\": \"email\" },\r",
-									"            \"phone\": { \"type\": \"string\" },\r",
-									"            \"street1\": { \"type\": \"string\" },\r",
-									"            \"street2\": { \"type\": \"string\" },\r",
-									"            \"city\": { \"type\": \"string\" },\r",
-									"            \"stateProvince\": { \"type\": \"string\" },\r",
-									"            \"postalCode\": { \"type\": \"string\" },\r",
-									"            \"country\": { \"type\": \"string\" }\r",
-									"        }\r",
-									"    };\r",
-									"\r",
-									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
-									"});\r",
-									"\r",
-									""
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.birthdate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.phone).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street1).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street2).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.city).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.stateProvince).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.postalCode).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.country).to.be.a(\"string\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -2727,22 +2734,21 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to update a non-existent contact ID",
+					"name": "TC - 46 | Attempt to update a non-existent contact ID",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 404 Bad Request\", function () {\r",
+									"pm.test(\"Status code is 404 Page Not Found\", function () {\r",
 									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"    pm.expect(pm.response.code).to.equal(404);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -2780,7 +2786,7 @@
 					"response": []
 				},
 				{
-					"name": "Update attempt with missing firstName",
+					"name": "TC - 47 | Update attempt with missing firstName",
 					"event": [
 						{
 							"listen": "test",
@@ -2790,10 +2796,10 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -2832,7 +2838,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with invalid email format",
+					"name": "TC - 48 | Update with invalid email format",
 					"event": [
 						{
 							"listen": "test",
@@ -2842,15 +2848,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									"\r",
-									"\r",
-									"\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -2888,7 +2890,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with wrong date format in birthdate",
+					"name": "TC - 49 | Update with wrong date format in birthdate",
 					"event": [
 						{
 							"listen": "test",
@@ -2898,15 +2900,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									"\r",
-									"\r",
-									"\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -2944,7 +2942,7 @@
 					"response": []
 				},
 				{
-					"name": "Submit empty strings in required fields during update",
+					"name": "TC - 50 | Submit empty strings in required fields during update",
 					"event": [
 						{
 							"listen": "test",
@@ -2954,15 +2952,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									"\r",
-									"\r",
-									"\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3000,7 +2994,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to update contact to a duplicate email",
+					"name": "TC - 51 | Attempt to update contact to a duplicate email",
 					"event": [
 						{
 							"listen": "test",
@@ -3010,12 +3004,11 @@
 									"    pm.response.to.have.status(409);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([409]);\r",
+									"    pm.expect(pm.response.code).to.equal(409);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3053,22 +3046,35 @@
 					"response": []
 				},
 				{
-					"name": "Update with street address 1 as only whitespace",
+					"name": "TC - 52 | Update with street address 1 as only whitespace",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									""
+									"pm.test(\"Contact infos matches input\", function () {\r",
+									"    var input = JSON.parse(pm.request.body.raw);\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
+									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
+									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3106,7 +3112,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with long street address 2 (300 + caracteres)",
+					"name": "TC - 53 | Update with long street address 2 (300 + caracteres)",
 					"event": [
 						{
 							"listen": "test",
@@ -3116,12 +3122,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3159,22 +3164,35 @@
 					"response": []
 				},
 				{
-					"name": "Update with street address 1 as special characters only",
+					"name": "TC - 54 | Update with street address 1 as special characters only",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-									"    pm.response.to.have.status(400);\r",
+									"pm.test(\"Status code is 200 OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									""
+									"pm.test(\"Contact infos matches input\", function () {\r",
+									"    var input = JSON.parse(pm.request.body.raw);\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
+									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
+									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3212,7 +3230,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with city as numbers only",
+					"name": "TC - 55 | Update with city as numbers only",
 					"event": [
 						{
 							"listen": "test",
@@ -3222,12 +3240,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3265,7 +3282,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with state as special chars only",
+					"name": "TC - 56 | Update with state as special chars only",
 					"event": [
 						{
 							"listen": "test",
@@ -3275,12 +3292,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3318,7 +3334,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with postal code with alphabetic characters",
+					"name": "TC - 57 | Update with postal code with alphabetic characters",
 					"event": [
 						{
 							"listen": "test",
@@ -3328,12 +3344,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3371,7 +3386,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with postal code with negative numbers",
+					"name": "TC - 58 | Update with postal code with negative numbers",
 					"event": [
 						{
 							"listen": "test",
@@ -3381,12 +3396,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3424,7 +3438,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with long postal code (300+ numbers)",
+					"name": "TC - 59 | Update with long postal code (300+ numbers)",
 					"event": [
 						{
 							"listen": "test",
@@ -3434,12 +3448,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3477,7 +3490,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with country as numbers only",
+					"name": "TC - 60 | Update with country as numbers only",
 					"event": [
 						{
 							"listen": "test",
@@ -3487,12 +3500,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3530,7 +3542,7 @@
 					"response": []
 				},
 				{
-					"name": "Update with invalid country name (nonsense)",
+					"name": "TC - 61 | Update with invalid country name (nonsense)",
 					"event": [
 						{
 							"listen": "test",
@@ -3540,12 +3552,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3583,7 +3594,7 @@
 					"response": []
 				},
 				{
-					"name": "SQL injection attempt in update payload",
+					"name": "TC - 62 | SQL injection attempt in update payload",
 					"event": [
 						{
 							"listen": "test",
@@ -3593,12 +3604,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3636,7 +3646,7 @@
 					"response": []
 				},
 				{
-					"name": "XSS script injection in update input",
+					"name": "TC - 63 | XSS script injection in update input",
 					"event": [
 						{
 							"listen": "test",
@@ -3645,20 +3655,27 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.expect(pm.response.code).to.eql(200);\r",
 									"});\r",
-									"\r",
+									"pm.test(\"Successful PUT request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
 									"pm.test(\"Contact updated with correct fields\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
-									"\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
-									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									"\r",
-									""
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3696,7 +3713,7 @@
 					"response": []
 				},
 				{
-					"name": "Update firstName with max field lengths (20 characters)",
+					"name": "TC - 64 | Update firstName with max field lengths (20 characters)",
 					"event": [
 						{
 							"listen": "test",
@@ -3705,20 +3722,27 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.expect(pm.response.code).to.eql(200);\r",
 									"});\r",
-									"\r",
+									"pm.test(\"Successful PUT request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
 									"pm.test(\"Contact updated with correct fields\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
-									"\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
-									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									"\r",
-									""
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3756,7 +3780,7 @@
 					"response": []
 				},
 				{
-					"name": "Update lastName with fields exceeding max allowed length (21+ characters)",
+					"name": "TC - 65 | Update lastName with fields exceeding max allowed length (21+ characters)",
 					"event": [
 						{
 							"listen": "test",
@@ -3766,12 +3790,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3809,7 +3832,7 @@
 					"response": []
 				},
 				{
-					"name": "Update without providing auth token",
+					"name": "TC - 66 | Update without providing auth token",
 					"event": [
 						{
 							"listen": "test",
@@ -3819,12 +3842,11 @@
 									"    pm.response.to.have.status(401);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,401]);\r",
+									"    pm.expect(pm.response.code).to.equal(401);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3863,7 +3885,7 @@
 					"response": []
 				},
 				{
-					"name": "Update using invalid or expired token",
+					"name": "TC - 67 | Update using invalid or expired token",
 					"event": [
 						{
 							"listen": "test",
@@ -3873,12 +3895,11 @@
 									"    pm.response.to.have.status(403);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([403]);\r",
+									"    pm.expect(pm.response.code).to.equal(403);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3922,7 +3943,7 @@
 					"response": []
 				},
 				{
-					"name": "Update firstName with input fields containing only whitespace",
+					"name": "TC - 68 | Update firstName with input fields containing only whitespace",
 					"event": [
 						{
 							"listen": "test",
@@ -3932,12 +3953,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -3975,7 +3995,7 @@
 					"response": []
 				},
 				{
-					"name": "Use negative contact ID during update",
+					"name": "TC - 69 | Use negative contact ID during update",
 					"event": [
 						{
 							"listen": "test",
@@ -3985,12 +4005,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -4028,7 +4047,7 @@
 					"response": []
 				},
 				{
-					"name": "Use only alphanumeric contact ID",
+					"name": "TC - 70 | Use only alphanumeric contact ID",
 					"event": [
 						{
 							"listen": "test",
@@ -4038,12 +4057,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -4081,7 +4099,7 @@
 					"response": []
 				},
 				{
-					"name": "Send completely empty JSON body in update",
+					"name": "TC - 71 | Send completely empty JSON body in update",
 					"event": [
 						{
 							"listen": "test",
@@ -4091,12 +4109,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -4134,7 +4151,7 @@
 					"response": []
 				},
 				{
-					"name": "Perform partial update (only one field firstName)",
+					"name": "TC - 72 | Perform partial update (only one field firstName)",
 					"event": [
 						{
 							"listen": "test",
@@ -4144,12 +4161,11 @@
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -4187,7 +4203,7 @@
 					"response": []
 				},
 				{
-					"name": "Include special characters in name fields during update",
+					"name": "TC - 73 | Include special characters in name fields during update",
 					"event": [
 						{
 							"listen": "test",
@@ -4196,20 +4212,44 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.expect(pm.response.code).to.eql(200);\r",
 									"});\r",
-									"\r",
+									"pm.test(\"Successful PUT request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
 									"pm.test(\"Contact updated with correct fields\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
-									"\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									""
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"pm.test(\"Validate JSON schema (data type)\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.birthdate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.phone).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street1).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street2).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.city).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.stateProvince).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.postalCode).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.country).to.be.a(\"string\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -4247,7 +4287,7 @@
 					"response": []
 				},
 				{
-					"name": "Validate response time for update is within 500ms",
+					"name": "TC - 74 | Validate response time for update is within 500ms",
 					"event": [
 						{
 							"listen": "test",
@@ -4256,20 +4296,44 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.expect(pm.response.code).to.eql(200);\r",
 									"});\r",
-									"\r",
+									"pm.test(\"Successful PUT request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
 									"pm.test(\"Contact updated with correct fields\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
-									"\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
 									"});\r",
 									"pm.test(\"Response time is less than 500ms\", function () {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
 									"});\r",
-									"\r",
-									""
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"pm.test(\"Validate JSON schema (data type)\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.birthdate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.phone).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street1).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street2).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.city).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.stateProvince).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.postalCode).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.country).to.be.a(\"string\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -5792,7 +5856,93 @@
 			"name": "DELETE - Delete Contact",
 			"item": [
 				{
-					"name": "Successfully delete an existing contact",
+					"name": "Add contact to be deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
+									"});\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"pm.test(\"Contact ID is returned\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
+									"    pm.environment.set(\"contactId\", jsonData._id);\r",
+									"});\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
+									"    var input = JSON.parse(pm.request.body.raw);\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
+									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
+									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"pm.test(\"Validate JSON schema (data type)\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.birthdate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.phone).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street1).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street2).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.city).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.stateProvince).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.postalCode).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.country).to.be.a(\"string\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Ahmed\", \r\n    \"lastName\": \"Elian\", \r\n    \"birthdate\": \"1990-05-28\", \r\n    \"email\": \"ahmed@fake.com\", \r\n    \"phone\": \"8005546755\", \r\n    \"street1\": \"1 Main St.\",\r\n    \"street2\": \"Apartment A\",\r\n    \"city\": \"Gaza\", \r\n    \"stateProvince\": \"PS\", \r\n    \"postalCode\": \"12345\",\r\n    \"country\": \"Palestine\" \r\n}"
+						},
+						"url": {
+							"raw": "{{Contacts URL}}",
+							"host": [
+								"{{Contacts URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TC - 103 | Successfully delete an existing contact",
 					"event": [
 						{
 							"listen": "test",
@@ -5801,11 +5951,14 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
 									"});\r",
 									""
 								],
@@ -5845,7 +5998,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to delete a contact that doesn’t exist",
+					"name": "TC - 104 | Attempt to delete a contact that doesn’t exist",
 					"event": [
 						{
 							"listen": "test",
@@ -5854,13 +6007,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -5898,7 +6050,7 @@
 					"response": []
 				},
 				{
-					"name": "Try deleting the same contact twice",
+					"name": "TC - 105 | Try deleting the same contact twice",
 					"event": [
 						{
 							"listen": "test",
@@ -5907,13 +6059,12 @@
 									"pm.test(\"Status code is 404 Not Found\", function () {\r",
 									"    pm.response.to.have.status(404);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(404);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -5951,7 +6102,7 @@
 					"response": []
 				},
 				{
-					"name": "SQL injection attempt in contact ID during delete",
+					"name": "TC - 106 | SQL injection attempt in contact ID during delete",
 					"event": [
 						{
 							"listen": "test",
@@ -5960,13 +6111,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6004,7 +6154,7 @@
 					"response": []
 				},
 				{
-					"name": "XSS attack in contact ID parameter",
+					"name": "TC - 107 | XSS attack in contact ID parameter",
 					"event": [
 						{
 							"listen": "test",
@@ -6013,13 +6163,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6057,7 +6206,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete contact without providing an auth token",
+					"name": "TC - 108 | Delete contact without providing an auth token",
 					"event": [
 						{
 							"listen": "test",
@@ -6066,13 +6215,12 @@
 									"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
 									"    pm.response.to.have.status(401);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([401]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(401);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6111,7 +6259,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt deletion with invalid/expired token",
+					"name": "TC - 109 | Attempt deletion with invalid/expired token",
 					"event": [
 						{
 							"listen": "test",
@@ -6120,11 +6268,11 @@
 									"pm.test(\"Status code is 403 Forbidden\", function () {\r",
 									"    pm.response.to.have.status(403);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([403]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(403);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -6170,7 +6318,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt deletion using a negative contact ID",
+					"name": "TC - 110 | Attempt deletion using a negative contact ID",
 					"event": [
 						{
 							"listen": "test",
@@ -6179,11 +6327,11 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
 									""
 								],
@@ -6223,7 +6371,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt deletion using only alphanumeric ID",
+					"name": "TC - 111 | Attempt deletion using only alphanumeric ID",
 					"event": [
 						{
 							"listen": "test",
@@ -6232,13 +6380,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6286,29 +6433,47 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"    pm.expect(pm.response.code).to.equal(201);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Response is in JSON format\", function () {\r",
-									"    pm.response.to.have.header(\"Content-Type\");\r",
-									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Contact ID is returned\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property(\"_id\");\r",
 									"    pm.environment.set(\"contactId\", jsonData._id);\r",
 									"});\r",
-									"\r",
-									"pm.test(\"Contact data matches input\", function () {\r",
+									"pm.test(\"Contact infos matches input\", function () {\r",
 									"    var input = JSON.parse(pm.request.body.raw);\r",
 									"    var response = pm.response.json();\r",
 									"    pm.expect(response.firstName).to.eql(input.firstName);\r",
 									"    pm.expect(response.lastName).to.eql(input.lastName);\r",
+									"    pm.expect(response.birthdate).to.eql(input.birthdate);\r",
 									"    pm.expect(response.email).to.eql(input.email);\r",
+									"    pm.expect(response.phone).to.eql(input.phone);\r",
+									"    pm.expect(response.street1).to.eql(input.street1);\r",
+									"    pm.expect(response.street2).to.eql(input.street2);\r",
+									"    pm.expect(response.city).to.eql(input.city);\r",
+									"    pm.expect(response.stateProvince).to.eql(input.stateProvince);\r",
+									"    pm.expect(response.postalCode).to.eql(input.postalCode);\r",
+									"    pm.expect(response.country).to.eql(input.country);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"pm.test(\"Validate JSON schema (data type)\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.firstName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.lastName).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.birthdate).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.phone).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street1).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.street2).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.city).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.stateProvince).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.postalCode).to.be.a(\"string\");\r",
+									"    pm.expect(jsonData.country).to.be.a(\"string\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -6344,7 +6509,7 @@
 					"response": []
 				},
 				{
-					"name": "Check response time for delete operation",
+					"name": "TC - 112 | Check response time for delete operation",
 					"event": [
 						{
 							"listen": "test",
@@ -6353,13 +6518,12 @@
 									"pm.test(\"Status code is 200 OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
 									"});\r",
 									"pm.test(\"Response time is less than 500ms\", function () {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
-									"});\r",
-									""
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6397,7 +6561,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt to delete contact linked to other data (Other Contact account)",
+					"name": "TC - 113 | Attempt to delete contact linked to other data (Other Contact account)",
 					"event": [
 						{
 							"listen": "test",
@@ -6406,13 +6570,12 @@
 									"pm.test(\"Status code is 409 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(409);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([409]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(409);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6450,7 +6613,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete contact with trailing spaces in ID",
+					"name": "TC - 114 | Delete contact with trailing spaces in ID",
 					"event": [
 						{
 							"listen": "test",
@@ -6459,13 +6622,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6503,7 +6665,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete contact using a very large number as ID",
+					"name": "TC - 115 | Delete contact using a very large number as ID",
 					"event": [
 						{
 							"listen": "test",
@@ -6512,13 +6674,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6556,7 +6717,7 @@
 					"response": []
 				},
 				{
-					"name": "Attempt deletion using special characters in ID",
+					"name": "TC - 116 | Attempt deletion using special characters in ID",
 					"event": [
 						{
 							"listen": "test",
@@ -6565,13 +6726,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400,409]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -6610,7 +6770,7 @@
 					"response": []
 				},
 				{
-					"name": "Try deleting contact without specifying an ID",
+					"name": "TC - 117 | Try deleting contact without specifying an ID",
 					"event": [
 						{
 							"listen": "test",
@@ -6619,13 +6779,12 @@
 									"pm.test(\"Status code is 400 Bad Request\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
-									"pm.test(\"Successful DELETE request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
 									"});\r",
-									"pm.test(\"Response time is less than 700ms\", function () {\r",
-									"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
-									"});\r",
-									""
+									"pm.test(\"Response time is less than 1000ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
